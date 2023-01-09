@@ -1,4 +1,6 @@
-import FakeRPi.GPIO as GPIO
+import time
+
+import RPi.GPIO as GPIO
 
 from util.constants import *
 
@@ -18,17 +20,21 @@ def reset() -> None:
 
 
 def setup() -> None:
-    GPIO.setmode(GPIO.BCM)
+    print("setting up")
 
-    # stops start engines
-    stop_engine()
+    GPIO.setmode(GPIO.BCM)
 
     # sets engines to OUT
     for engine in engines:
         GPIO.setup(engine, GPIO.OUT)
 
+    for engine in start_engines:
+        GPIO.setup(engine, GPIO.OUT)
+
     # configure sensors
     setup_ultra()
+
+    print("finished setting up")
 
 
 def setup_ultra():

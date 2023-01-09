@@ -6,13 +6,13 @@ import interface.interface as interface
 
 
 def main():
-    # set up the servo motor
-    servo.setup()
-
     # set up and start the car
     car.reset()
     car.setup()
     car.start_engine()
+
+    # set up the servo motor
+    servo.setup()
 
     # starts the automation
     automation.start(car, servo)

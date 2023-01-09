@@ -1,6 +1,6 @@
 import time
 
-import FakeRPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 from util.constants import *
 from util.utiliities import angle_to_percent
@@ -9,9 +9,9 @@ from util.utiliities import angle_to_percent
 # limits are -90 and 90 since the servo motor
 # can only move 180 degrees
 angles = [
-    -90, -45,  # left
-    0,  # front
-    45, 90  # right
+    0, 45,  # left
+    90,  # front
+    135, 180  # right
 ]
 
 
@@ -79,13 +79,16 @@ def stop_trigger_and_check() -> float:
     GPIO.output(TRIGGER, False)
 
     start = time.time()
-    end = time.time() + 0.1
+    end = time.time()
 
-    # TODO: uncomment this
-    # while GPIO.input(ECHO) == 0:
-    #     start = time.time()
-    # while GPIO.input(ECHO) == 1:
-    #     end = time.time()
+    print("scanning")
 
+    while GPIO.input(ECHO) == 0:
+        start = time.time()
+
+    while GPIO.input(ECHO) == 1:
+        end = time.time()
+
+    print("scanned")
     elapsed = end - start
     return (elapsed * 34300) / 2

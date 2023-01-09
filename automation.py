@@ -1,5 +1,6 @@
 import time
 from threading import Thread
+from util.constants import SERVO_DEFAULT_ANGLE
 
 # determines if the automation is running or not.
 running = False
@@ -29,7 +30,7 @@ def start_automation(car) -> None:
 
         # if there is nothing in front of the car
         # then move forward
-        if last_distances[0] > 20:
+        if last_distances[SERVO_DEFAULT_ANGLE] > 20:
             print("Moving forward...")
 
             # FIXME: check if the engines ignore the start
