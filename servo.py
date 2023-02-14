@@ -5,14 +5,10 @@ import RPi.GPIO as GPIO
 from util.constants import *
 from util.utiliities import angle_to_percent
 
+
 # the angles to scan.
 # limits are -90 and 90 since the servo motor
 # can only move 180 degrees
-angles = [
-    0, 45,  # left
-    90,  # front
-    135, 180  # right
-]
 
 
 def setup() -> None:
@@ -32,14 +28,22 @@ def setup() -> None:
     pwm.start(angle_to_percent(SERVO_DEFAULT_ANGLE))
 
 
-def scan() -> dict[int, float]:
+def scan(complete_angle_scan: any = None) -> dict[int, float]:
     """
     Scans the environment at the predefined angles.
+
+    :param complete_angle_scan: function used as a callback to listen
+    when the scan of an angle is completed.
     :return: a dictionary with the angle as key and the distance as value
     """
     distances = {}
-    for angle in angles:
-        distances[angle] = scan_angle(angle)
+    for angle in SERVO_ANGLES:
+        distance = scan_angle(angle)
+
+        if complete_angle_scan is not None:
+            complete_angle_scan(angle, distance)
+
+        distances[angle] = distance
     return distances
 
 
@@ -55,7 +59,7 @@ def scan_angle(angle: int) -> float:
     pwm.ChangeDutyCycle(angle_to_percent(angle))
 
     # gives the servo some time to move
-    time.sleep(1)
+    time.sleep(0.7)
 
     # start trigger
     GPIO.output(TRIGGER, True)
@@ -63,7 +67,7 @@ def scan_angle(angle: int) -> float:
     # wait for the trigger to finish
     time.sleep(0.00001)
 
-    # stop trigger and check for the distance
+    # stop trigger and get the distance
     return stop_trigger_and_check()
 
 
@@ -81,14 +85,11 @@ def stop_trigger_and_check() -> float:
     start = time.time()
     end = time.time()
 
-    print("scanning")
-
     while GPIO.input(ECHO) == 0:
         start = time.time()
 
     while GPIO.input(ECHO) == 1:
         end = time.time()
 
-    print("scanned")
     elapsed = end - start
     return (elapsed * 34300) / 2

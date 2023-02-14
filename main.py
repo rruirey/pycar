@@ -9,13 +9,12 @@ def main():
     # set up and start the car
     car.reset()
     car.setup()
-    car.start_engine()
 
     # set up the servo motor
     servo.setup()
 
     # starts the automation
-    automation.start(car, servo)
+    automation.start()
 
     # creates the window the last because
     # it will block the execution since it

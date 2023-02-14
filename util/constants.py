@@ -14,6 +14,15 @@ START_ENGINE_2 = 5
 SERVO = 6
 SERVO_DEFAULT_ANGLE = 90
 SERVO_FREQUENCY = 50
+TOTAL_SERVO_ANGLES = 5
+SERVO_ANGLES = [
+    0, 45,  # right
+    90,  # front
+    135, 180,  # left
+    # 135,  # left
+    # 90,  # front
+    # 45  # right
+]
 
 TRIGGER = 25
 ECHO = 21
